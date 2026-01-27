@@ -6,7 +6,7 @@
 
 generator client {
   provider = "prisma-client"
-  output   = "../generated/prisma"
+  output   = "../src/generated/prisma"
 }
 
 datasource db {
@@ -24,7 +24,10 @@ model User {
   sessions      Session[]
   accounts      Account[]
 
-  role String @default("student")
+  role          String          @default("student")
+  tutorProfiles TutorProfiles[]
+  bookings      Booking[]
+  reviews       Reviews[]
 
   @@unique([email])
   @@map("user")
@@ -76,4 +79,68 @@ model Verification {
 
   @@index([identifier])
   @@map("verification")
+}
+
+model TutorProfiles {
+  id              String    @id @default(uuid())
+  userId          String?
+  user            User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bio             String    @db.Text
+  hourly_rate     Int?
+  experience_year Int?
+  average_rating  Int?
+  categoryId      String
+  category        Category  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  bookings        Booking[]
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  reviews         Reviews[]
+  @@map("tutorProfiles")
+}
+
+model Category {
+  id            String          @id @default(uuid())
+  name          String
+  description   String?
+  tutorProfiles TutorProfiles[]
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+@@map("category")
+}
+
+model Booking {
+  id        String        @id @default(uuid())
+  studentId String
+  user      User          @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  tutorId   String
+  tutor     TutorProfiles @relation(fields: [tutorId], references: [id], onDelete: Cascade)
+  status    bookingStatus @default(pending)
+  price     Int
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+  // reviews   Reviews[]
+  @@map("booking")
+}
+
+model Reviews {
+  id        String        @id @default(uuid())
+  studentId String
+  user      User          @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  tutorId   String
+  tutor     TutorProfiles @relation(fields: [tutorId], references: [id], onDelete: Cascade)
+  revies String @db.Text
+  rating Int
+  // bookingId String
+  // booking   Booking       @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  @@map("reviews")
+}
+
+enum bookingStatus {
+  pending
+  confirmed
+  completed
+  canceled
 }

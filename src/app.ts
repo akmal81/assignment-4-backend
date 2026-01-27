@@ -12,10 +12,11 @@ app.use(cors(
     }
 ))
 
-// butter-auth
+app.use(express.json())
+
+
 app.all("/api/auth/*splat", toNodeHandler(auth));
 
-app.use(express.json())
 
 
 
