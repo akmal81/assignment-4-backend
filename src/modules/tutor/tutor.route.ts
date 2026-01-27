@@ -1,0 +1,13 @@
+import { Router } from "express";
+import { tutorController } from "./tutor.controller";
+import auth, { UserRole } from "../../middleWare/auth";
+
+const router = Router();
+
+router.post(
+    '/', 
+    auth(UserRole.TUTOR) ,
+    tutorController.createTutorProfile
+)
+
+export const tutorRoter: Router = router;
