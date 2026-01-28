@@ -495,14 +495,6 @@ export type EnumbookingStatusFieldUpdateOperationsInput = {
   set?: $Enums.bookingStatus
 }
 
-export type IntFieldUpdateOperationsInput = {
-  set?: number
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
 export type BookingCreateWithoutUserInput = {
   id?: string
   status?: $Enums.bookingStatus

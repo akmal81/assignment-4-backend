@@ -4,6 +4,10 @@ import auth, { UserRole } from "../../middleWare/auth";
 
 const router = Router();
 
+
+router.get('/', tutorController.getAllTutor)
+
+
 router.post(
     '/', 
     auth(UserRole.TUTOR) ,

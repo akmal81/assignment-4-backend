@@ -143,6 +143,8 @@ export const TutorProfilesScalarFieldEnum = {
   hourly_rate: 'hourly_rate',
   experience_year: 'experience_year',
   average_rating: 'average_rating',
+  subject: 'subject',
+  rating: 'rating',
   categoryId: 'categoryId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'

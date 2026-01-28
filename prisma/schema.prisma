@@ -84,17 +84,20 @@ model Verification {
 model TutorProfiles {
   id              String    @id @default(uuid())
   userId          String
-  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user            User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   bio             String    @db.Text
   hourly_rate     Int?
   experience_year Int?
   average_rating  Int?
+  subject         String    @default("any")
+  rating          Int       @default(5)
   categoryId      String?
-  category        Category?  @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  category        Category? @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   bookings        Booking[]
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @default(now())
   reviews         Reviews[]
+
   @@map("tutorProfiles")
 }
 
@@ -105,7 +108,8 @@ model Category {
   tutorProfiles TutorProfiles[]
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @default(now())
-@@map("category")
+
+  @@map("category")
 }
 
 model Booking {
@@ -118,22 +122,23 @@ model Booking {
   price     Int
   createdAt DateTime      @default(now())
   updatedAt DateTime      @default(now())
+
   // reviews   Reviews[]
   @@map("booking")
 }
 
 model Reviews {
-  id        String        @id @default(uuid())
+  id        String         @id @default(uuid())
   studentId String
-  user      User          @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  user      User           @relation(fields: [studentId], references: [id], onDelete: Cascade)
   tutorId   String?
   tutor     TutorProfiles? @relation(fields: [tutorId], references: [id], onDelete: Cascade)
-  revies String @db.Text
-  rating Int
+  revies    String         @db.Text
+  rating    Int
   // bookingId String
   // booking   Booking       @relation(fields: [bookingId], references: [id], onDelete: Cascade)
-  createdAt DateTime      @default(now())
-  updatedAt DateTime     @default(now())
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @default(now())
 
   @@map("reviews")
 }
