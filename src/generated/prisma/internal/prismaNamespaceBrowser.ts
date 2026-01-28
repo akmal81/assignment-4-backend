@@ -146,6 +146,7 @@ export const TutorProfilesScalarFieldEnum = {
   subject: 'subject',
   rating: 'rating',
   categoryId: 'categoryId',
+  isFeatured: 'isFeatured',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

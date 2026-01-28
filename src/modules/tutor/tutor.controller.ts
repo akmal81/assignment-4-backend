@@ -43,13 +43,14 @@ const createTutorProfile = async (req: Request, res: Response) => {
 const getAllTutor = async (req: Request, res: Response) => {
     try {
 
-        const { search, rating, price, category } = req.query;
+        const { search, rating, price, category, isFeatured } = req.query;
 
         const payload: {
             search?: string
             average_rating?: number
             hourly_rate?: number
-            category?:string
+            category?: string
+            isFeatured?:boolean
         } = {}
 
         if (typeof search === "string") {
@@ -92,9 +93,30 @@ const getAllTutor = async (req: Request, res: Response) => {
     }
 }
 
+const getTutorById = async (req: Request, res: Response) => {
+
+    try {
+        const { tutorId } = req.params 
+
+
+        const result = await tutorService.getTutorById(tutorId as string)
+        res.status(201).json(result)
+
+    } catch (error) {
+        res.status(400).json(
+            {
+                error: "Profile careation failed!!",
+                details: error
+            }
+        )
+    }
+
+}
+
 
 export const tutorController = {
     createTutorProfile,
     getAllTutor,
+    getTutorById
 
 }

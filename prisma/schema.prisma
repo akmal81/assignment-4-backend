@@ -92,6 +92,7 @@ model TutorProfiles {
   subject         String    @default("any")
   rating          Int       @default(5)
   categoryId      String?
+  isFeatured      Boolean   @default(false)
   category        Category? @relation(fields: [categoryId], references: [id], onDelete: Cascade)
   bookings        Booking[]
   createdAt       DateTime  @default(now())

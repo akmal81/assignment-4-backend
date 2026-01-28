@@ -19,73 +19,16 @@ const createTutorProfile = async (data: Omit<TutorProfiles, "id" | "createdAt" |
     return result
 }
 
-// const getAllTutor = async (payload: {
-//     search?: string | undefined;
-//      average_rating?: number | undefined;
-//      hourly_rate?: number | undefined;
-// }) => {
-//     const andConditions: TutorProfilesWhereInput[] = [];
-
-//     if (payload.search) {
-//         andConditions.push(
-//             {
-//                 OR: [
-//                     {
-//                         subject: {
-//                             contains: payload.search as string,
-//                             mode: "insensitive"
-//                         }
-//                     }
-//                 ]
-//             }
-//         )
-//     }
-//     if (typeof payload.average_rating === "number") {
-//         andConditions.push(
-//             {
-//                 OR: [
-//                     {
-//                         average_rating: {
-//                             gte: payload.average_rating 
-
-//                         }
-//                     }
-//                 ]
-//             }
-//         )
-//     }
-
-//     if (typeof payload.hourly_rate === "number") {
-//         andConditions.push(
-//             {
-//                 OR: [
-//                     {
-//                         hourly_rate: {
-//                             gte: payload.hourly_rate 
-
-//                         }
-//                     }
-//                 ]
-//             }
-//         )
-//     }
-
-//     const allTutor = await prisma.tutorProfiles.findMany(
-//         {
-//             where: {
-//                 AND: andConditions
-//             }
-//         }
-//     )
-//     return allTutor
-// }
 
 
+// Browse and search tutors by subject, rating, and price
+// Filter tutors by category
 const getAllTutor = async (payload: {
     search?: string
     average_rating?: number
     hourly_rate?: number
     category?: string
+    isFeatured?:boolean
 }) => {
     const andConditions: TutorProfilesWhereInput[] = []
 
@@ -117,6 +60,14 @@ const getAllTutor = async (payload: {
         })
     }
 
+    // if (payload.isFeatured==="true") {
+    //      andConditions.push({
+    //         isFeatured: {
+    //             equals: payload.isFeatured
+    //         }
+    //     })
+    // }
+
     if (payload.category) {
         andConditions.push({
             category: {
@@ -138,9 +89,28 @@ const getAllTutor = async (payload: {
     })
 }
 
+// View detailed tutor profiles with reviews
+
+const getTutorById = async (tutorId: string) => {
+
+    const result = await prisma.tutorProfiles.findUnique(
+        {
+            where:{
+                id:tutorId
+            },
+            include:{
+                reviews: true
+            }
+        }
+    )
+
+
+    return result
+}
 
 
 export const tutorService = {
     createTutorProfile,
-    getAllTutor
+    getAllTutor,
+    getTutorById
 }
