@@ -1,3 +1,4 @@
+
 import { TutorProfiles } from "../../generated/prisma/client";
 import { TutorProfilesWhereInput } from "../../generated/prisma/models";
 import { prisma } from "../../lib/prisma";
@@ -28,7 +29,8 @@ const getAllTutor = async (payload: {
     average_rating?: number
     hourly_rate?: number
     category?: string
-    isFeatured?:boolean
+    isFeatured?: boolean
+    userId?:string
 }) => {
     const andConditions: TutorProfilesWhereInput[] = []
 
@@ -60,32 +62,60 @@ const getAllTutor = async (payload: {
         })
     }
 
-    // if (payload.isFeatured==="true") {
-    //      andConditions.push({
+    // if (payload.isFeatured === true) {
+    //     andConditions.push({
     //         isFeatured: {
     //             equals: payload.isFeatured
     //         }
     //     })
     // }
 
-    if (payload.category) {
+   if (typeof payload.isFeatured === 'boolean') {
+
+        const { isFeatured } = payload
+        andConditions.push(
+            {
+                isFeatured:isFeatured
+            }
+        )
+    }
+
+
+    
+    if (typeof payload.userId === "string") {
         andConditions.push({
-            category: {
-                name: {
-                    contains: payload.category,
-                    mode: "insensitive"
-                }
+            userId: {
+                contains: payload.userId,
+                mode: "insensitive"
             }
         })
+
+        return prisma.tutorProfiles.findFirst(
+            {
+                where:{
+                    userId:payload.userId
+                }
+            }
+        )
     }
+
+
+    
 
     return prisma.tutorProfiles.findMany({
         where: {
             AND: andConditions
         },
         include: {
-            category: true
+            category: true,
+            user:{
+                select:{
+                    name:true
+                }
+            },
+            reviews: true
         }
+
     })
 }
 
@@ -95,15 +125,52 @@ const getTutorById = async (tutorId: string) => {
 
     const result = await prisma.tutorProfiles.findUnique(
         {
+            where: {
+                id: tutorId
+            },
+            include: {
+                user:{
+                    select:{
+                        name:true
+                    }
+                },
+                reviews: true
+            },
+            
+        }
+    )
+
+
+    return result
+}
+
+const updateTutor = async (tutorId:string, data: Partial<TutorProfiles>, authorId:string) => {
+
+    console.log(tutorId, data, authorId)
+
+   
+
+    
+    const tutorData = await prisma.tutorProfiles.findUniqueOrThrow(
+        {
             where:{
                 id:tutorId
             },
-            include:{
-                reviews: true
+            select:{
+                id:true
             }
         }
     )
 
+
+    const result = prisma.tutorProfiles.update(
+        {
+            where:{
+                id:tutorData.id
+            },
+            data
+        }
+    )
 
     return result
 }
@@ -112,5 +179,7 @@ const getTutorById = async (tutorId: string) => {
 export const tutorService = {
     createTutorProfile,
     getAllTutor,
-    getTutorById
+    getTutorById,
+    updateTutor
+   
 }

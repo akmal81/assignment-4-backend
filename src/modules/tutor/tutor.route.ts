@@ -16,10 +16,18 @@ router.get(
 )
 
 
+
 router.post(
     '/', 
     auth(UserRole.TUTOR) ,
     tutorController.createTutorProfile
+)
+
+
+router.patch(
+    '/:tutorId', 
+    auth(UserRole.TUTOR),
+    tutorController.updateTutor
 )
 
 export const tutorRoter: Router = router;

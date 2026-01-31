@@ -5,6 +5,9 @@ import { auth } from "./lib/auth";
 import { tutorRoter } from "./modules/tutor/tutor.route";
 import { bookingRoute } from "./modules/bookTutoringSession/booking.router";
 import { reviewsRoutes } from "./modules/reviews/review.router";
+import { categoryRouter } from "./modules/category/category.route";
+import { setTimeSlot } from "./modules/availableSlot/setTimeSlot.route";
+
 
 const app:Application = express();
 
@@ -25,6 +28,10 @@ app.use('/api/v1/tutors',  tutorRoter)
 app.use('/api/v1/bookings',  bookingRoute)
 
 app.use('/api/v1/reviews', reviewsRoutes)
+
+app.use('/api/v1/categories', categoryRouter)
+
+app.use('/api/v1/set-time-slot', setTimeSlot)
 
 
 

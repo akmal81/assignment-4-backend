@@ -57,8 +57,9 @@ export const ModelName = {
   Verification: 'Verification',
   TutorProfiles: 'TutorProfiles',
   Category: 'Category',
-  Booking: 'Booking',
-  Reviews: 'Reviews'
+  Reviews: 'Reviews',
+  AvailabilitySlot: 'AvailabilitySlot',
+  Booking: 'Booking'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -138,15 +139,17 @@ export type VerificationScalarFieldEnum = (typeof VerificationScalarFieldEnum)[k
 
 export const TutorProfilesScalarFieldEnum = {
   id: 'id',
+  name: 'name',
   userId: 'userId',
   bio: 'bio',
+  image: 'image',
+  availablity: 'availablity',
   hourly_rate: 'hourly_rate',
   experience_year: 'experience_year',
   average_rating: 'average_rating',
   subject: 'subject',
-  rating: 'rating',
-  categoryId: 'categoryId',
   isFeatured: 'isFeatured',
+  categoryId: 'categoryId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -165,19 +168,6 @@ export const CategoryScalarFieldEnum = {
 export type CategoryScalarFieldEnum = (typeof CategoryScalarFieldEnum)[keyof typeof CategoryScalarFieldEnum]
 
 
-export const BookingScalarFieldEnum = {
-  id: 'id',
-  studentId: 'studentId',
-  tutorId: 'tutorId',
-  status: 'status',
-  price: 'price',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type BookingScalarFieldEnum = (typeof BookingScalarFieldEnum)[keyof typeof BookingScalarFieldEnum]
-
-
 export const ReviewsScalarFieldEnum = {
   id: 'id',
   studentId: 'studentId',
@@ -189,6 +179,33 @@ export const ReviewsScalarFieldEnum = {
 } as const
 
 export type ReviewsScalarFieldEnum = (typeof ReviewsScalarFieldEnum)[keyof typeof ReviewsScalarFieldEnum]
+
+
+export const AvailabilitySlotScalarFieldEnum = {
+  id: 'id',
+  tutorId: 'tutorId',
+  date: 'date',
+  startTime: 'startTime',
+  endTime: 'endTime',
+  isBooked: 'isBooked',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AvailabilitySlotScalarFieldEnum = (typeof AvailabilitySlotScalarFieldEnum)[keyof typeof AvailabilitySlotScalarFieldEnum]
+
+
+export const BookingScalarFieldEnum = {
+  id: 'id',
+  slotId: 'slotId',
+  studentId: 'studentId',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  tutorProfilesId: 'tutorProfilesId'
+} as const
+
+export type BookingScalarFieldEnum = (typeof BookingScalarFieldEnum)[keyof typeof BookingScalarFieldEnum]
 
 
 export const SortOrder = {

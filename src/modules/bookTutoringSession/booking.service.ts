@@ -6,14 +6,15 @@ const careateBooking = async(payload:{
     studentId:string
     tutorId:string
     price:number
+   
 }
 ) => {
 
-    return await prisma.booking.create(
-        {
-            data:payload
-        }
-    )
+    // return await prisma.booking.create(
+    //     {
+    //         data:payload
+    //     }
+    // )
 }
 
 

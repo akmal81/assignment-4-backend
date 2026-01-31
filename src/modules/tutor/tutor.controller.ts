@@ -43,14 +43,15 @@ const createTutorProfile = async (req: Request, res: Response) => {
 const getAllTutor = async (req: Request, res: Response) => {
     try {
 
-        const { search, rating, price, category, isFeatured } = req.query;
+        const { search, rating, price, category, isFeatured, userId } = req.query;
 
         const payload: {
             search?: string
             average_rating?: number
             hourly_rate?: number
             category?: string
-            isFeatured?:boolean
+            isFeatured?: boolean
+            userId?:string
         } = {}
 
         if (typeof search === "string") {
@@ -68,20 +69,18 @@ const getAllTutor = async (req: Request, res: Response) => {
         if (typeof category === "string") {
             payload.category = category
         }
+      
+        if (typeof isFeatured === "string") {
+            payload.isFeatured = isFeatured === "true"
+        }
+          if (typeof userId === "string") {
+            payload.userId = userId
+        }
 
         const result = await tutorService.getAllTutor(payload)
         res.status(200).json(result)
 
-        // const searchString = typeof search === 'string' ? search : undefined
-        // const average_rating = typeof rating === "string" && !isNaN(Number(rating))
-        // ? Number(rating)
-        // : undefined
-        // const hourly_rate = typeof price === "string" && !isNaN(Number(price))
-        // ? Number(price)
-        // : undefined
 
-        // const result = await tutorService.getAllTutor({search:searchString, average_rating, hourly_rate})
-        //  res.status(201).json(result)
 
     } catch (err) {
         res.status(400).json(
@@ -96,7 +95,7 @@ const getAllTutor = async (req: Request, res: Response) => {
 const getTutorById = async (req: Request, res: Response) => {
 
     try {
-        const { tutorId } = req.params 
+        const { tutorId } = req.params
 
 
         const result = await tutorService.getTutorById(tutorId as string)
@@ -114,9 +113,44 @@ const getTutorById = async (req: Request, res: Response) => {
 }
 
 
+const updateTutor = async function name(req: Request, res: Response) {
+    
+  try {
+
+     const user = req.user;
+        if (!user) {
+            throw new Error("You are unauthorize please login");
+
+        }
+
+        const {tutorId} = req.params;
+
+        // const isTutor = user.role === UserRole.TUTOR
+
+        const result = await tutorService.updateTutor(tutorId as string, req.body, user.id)
+
+        res.status(200).json(result)
+    
+  } catch (error) {
+    res.status(400).json(
+            {
+                error: "Udpate failed!!",
+                details: error
+            }
+        )
+  }
+
+
+}
+
+
+
+
 export const tutorController = {
     createTutorProfile,
     getAllTutor,
-    getTutorById
+    getTutorById,
+    updateTutor
+  
 
 }
