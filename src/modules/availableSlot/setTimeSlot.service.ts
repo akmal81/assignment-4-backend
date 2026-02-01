@@ -1,4 +1,4 @@
-import { string } from "better-auth"
+
 import { AvailabilitySlot } from "../../generated/prisma/client"
 import { prisma } from "../../lib/prisma"
 

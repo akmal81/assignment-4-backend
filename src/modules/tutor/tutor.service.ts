@@ -30,7 +30,7 @@ const getAllTutor = async (payload: {
     hourly_rate?: number
     category?: string
     isFeatured?: boolean
-    userId?:string
+    userId?: string
 }) => {
     const andConditions: TutorProfilesWhereInput[] = []
 
@@ -70,18 +70,18 @@ const getAllTutor = async (payload: {
     //     })
     // }
 
-   if (typeof payload.isFeatured === 'boolean') {
+    if (typeof payload.isFeatured === 'boolean') {
 
         const { isFeatured } = payload
         andConditions.push(
             {
-                isFeatured:isFeatured
+                isFeatured: isFeatured
             }
         )
     }
 
 
-    
+
     if (typeof payload.userId === "string") {
         andConditions.push({
             userId: {
@@ -92,15 +92,15 @@ const getAllTutor = async (payload: {
 
         return prisma.tutorProfiles.findFirst(
             {
-                where:{
-                    userId:payload.userId
+                where: {
+                    userId: payload.userId
                 }
             }
         )
     }
 
 
-    
+
 
     return prisma.tutorProfiles.findMany({
         where: {
@@ -108,9 +108,9 @@ const getAllTutor = async (payload: {
         },
         include: {
             category: true,
-            user:{
-                select:{
-                    name:true
+            user: {
+                select: {
+                    name: true
                 }
             },
             reviews: true
@@ -129,14 +129,23 @@ const getTutorById = async (tutorId: string) => {
                 id: tutorId
             },
             include: {
-                user:{
-                    select:{
-                        name:true
+                user: {
+                    select: {
+                        name: true
                     }
                 },
-                reviews: true
+                reviews: true,
+                availabilitySlots: {
+                    select:{
+                        id:true,
+                        date:true,
+                        startTime:true,
+                        endTime:true,
+                        isBooked:true
+                    }
+                }
             },
-            
+
         }
     )
 
@@ -144,20 +153,20 @@ const getTutorById = async (tutorId: string) => {
     return result
 }
 
-const updateTutor = async (tutorId:string, data: Partial<TutorProfiles>, authorId:string) => {
+const updateTutor = async (tutorId: string, data: Partial<TutorProfiles>, authorId: string) => {
 
     console.log(tutorId, data, authorId)
 
-   
 
-    
+
+
     const tutorData = await prisma.tutorProfiles.findUniqueOrThrow(
         {
-            where:{
-                id:tutorId
+            where: {
+                id: tutorId
             },
-            select:{
-                id:true
+            select: {
+                id: true
             }
         }
     )
@@ -165,8 +174,8 @@ const updateTutor = async (tutorId:string, data: Partial<TutorProfiles>, authorI
 
     const result = prisma.tutorProfiles.update(
         {
-            where:{
-                id:tutorData.id
+            where: {
+                id: tutorData.id
             },
             data
         }
@@ -181,5 +190,5 @@ export const tutorService = {
     getAllTutor,
     getTutorById,
     updateTutor
-   
+
 }

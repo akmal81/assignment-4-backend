@@ -5,7 +5,7 @@ import { bookingService } from "./booking.service"
 const careateBooking = async (req: Request, res: Response) => {
 
 
-    try {
+    
 
 
         try {
@@ -37,22 +37,30 @@ const careateBooking = async (req: Request, res: Response) => {
                 }
             )
         }
-
-
-    } catch (err) {
-        res.status(400).json(
-            {
-                error: "Profile careation failed!!",
-                details: err
-            }
-        )
-    }
-
-
 }
 
 
 
+const getBookings = async (req: Request, res: Response) => {
+
+        try {
+           const studentId = req.params.studentId
+            
+            const result = await bookingService.getBookings(studentId as string)
+            res.status(201).json(result)
+
+        } catch (err) {
+            res.status(400).json(
+                {
+                    error: "Profile careation failed!!",
+                    details: err
+                }
+            )
+        }
+}
+
+
 export const bookingController = {
-    careateBooking
+    careateBooking,
+    getBookings
 }
